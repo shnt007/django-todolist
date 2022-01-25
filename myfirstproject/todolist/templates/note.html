@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Django Templates</title>
+    </head>
+    <style>
+        input, label {
+            width: 400px;
+            height: 50px;
+            font-size: 25px;
+            border-radius: 25px;
+        }
+
+        button {
+            width: 100px;
+            height: 20px;
+            border-radius: 0;
+            border: 1px solid red;
+            color: red;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: red;
+            color: white;
+        }
+    </style>
+    <body>
+        <h1>USER NOTE</h1>
+        <spam>{{ msg }}</spam>
+        <form method = "POST" action = "{% url 'note.add' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+                <input type = "submit" value= "SAVE">
+        </form>
+        <h1>Data</h1>
+        <p>{{ data.note_title }}</p>
+        <p>{{ data.note_description }}</p>
+        <p>{{ data.note_addded_at }}</p>
+        <div>
+
+        </div>
+    </body>
+</html>
