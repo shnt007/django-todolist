@@ -10,7 +10,7 @@
             <h3>Note Create  | TO DO LIST</h3>
             <h5><spam>{% if msg %} {{ msg }} {% endif %}</spam></h5>
             <a href="{% url 'note.index' %}">Back</a></br>
-            <form action = "" method = "POST">
+            <form action = "{% url 'note.create' %}" method = "POST">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <input type = "submit" value = "SAVE">
