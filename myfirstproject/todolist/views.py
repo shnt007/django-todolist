@@ -1,4 +1,3 @@
-from re import template
 from django.contrib import admin
 
 from django.shortcuts import render
@@ -12,9 +11,11 @@ from todolist.form import UserTaskForm
 from todolist.form import AssignedTaskDescForm
 from todolist.form import UserNoteForm
 from todolist.form import PersonalTaskForm
+from todolist.form import UserRegistrationForm
 
-#importing models
-from todolist.form import UserNote
+# importing models
+from todolist.models import UserNote
+from todolist.models import User
 
 # Create your views here.
 def index(request, year=date.today().year, month=date.today().month):
@@ -134,6 +135,42 @@ def note_delete(request, note_id):
     un = UserNote.objects.all()
     msg = "Delete successfully"
     return render(request, 'notes/index.html', {'data':un, 'msg':msg})
+
+# user
+def user_create(request):
+    userForm = UserRegistrationForm 
+    return render(request, 'users/create.html', {'form': userForm})
+
+def user_index(request):
+    if request.session.has_key('username'):
+        username = request.session['username']
+        return render(request, 'users/index.html', {'username': username})
+    else:
+        return render(request, 'users/login.html')
+
+def user_register(request):
+    if request.method == "POST":
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        contact = request.POST.get('contact')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = User(first_name=first_name, last_name=last_name, contact=contact, \
+            username=username, password=password)
+        user.save()
+
+        # setting session
+        request.session['username'] = username
+
+        # checking session key if exist
+        if request.session.has_key('username'):
+            # getting session value
+            uname = request.session['username']
+            return render(request, 'users/index.html', {'username': uname})
+    else:
+        userForm = UserRegistrationForm 
+        return render(request, 'users/create.html', {'form': userForm})
 
 '''def assigned_task_desc(request):
     assign = AssignedTaskDescForm
