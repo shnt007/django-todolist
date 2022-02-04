@@ -1,3 +1,4 @@
+from re import template
 from django.contrib import admin
 
 from django.shortcuts import render
@@ -7,7 +8,7 @@ import calendar
 from calendar import HTMLCalendar
 
 #importing forms
-from todolist.form import UserTaskForm
+from todolist.form import UserLoginForm, UserTaskForm
 from todolist.form import AssignedTaskDescForm
 from todolist.form import UserNoteForm
 from todolist.form import PersonalTaskForm
@@ -146,7 +147,11 @@ def user_index(request):
         username = request.session['username']
         return render(request, 'users/index.html', {'username': username})
     else:
-        return render(request, 'users/login.html')
+        template= 'urls/login.html'
+        ul = UserLoginForm
+        msg = "Please login to access"
+        context={'form':ul, 'msg':msg}
+        return render(request, template,context)
 
 def user_register(request):
     if request.method == "POST":
@@ -171,6 +176,35 @@ def user_register(request):
     else:
         userForm = UserRegistrationForm 
         return render(request, 'users/create.html', {'form': userForm})
+
+def user_login(request):
+    template = 'users/login.html'
+    form = UserLoginForm
+    context = {'form':form}
+    if request.methond == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = User.object.get(username=username)
+        if password == user.password:
+            request.session['username']= user.username
+            if request.session.has_key('username'):
+                uname = request.session['username']
+                return render(request,'users/index/html',{'username':username})
+        else:
+            return render(request,template,context)
+    else:
+        return render(request,template,context)
+
+def user_logout(request):
+    template= 'urls/login.html'
+    ul = UserLoginForm
+    msg = "Please login to access"
+    context={'form':ul, 'msg':msg}
+    if request.session.has_key('username'):
+        del request.session['username']
+        return render(request, template, context)
+    else:
+        return render(request, template,context)
 
 '''def assigned_task_desc(request):
     assign = AssignedTaskDescForm

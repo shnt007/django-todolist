@@ -20,7 +20,8 @@ urlpatterns = [
     path('users/', views.user_index, name="users.index"),
     path('users/create', views.user_create, name="users.create"),
     path('users/register', views.user_register, name="users.register")
-
+    path('users/login', views.user_login,name ="user.login")
+    path('users/logout', views.user_logout,name ="user.logout")
 
     #ORM
     # 1. index - display whole datalist

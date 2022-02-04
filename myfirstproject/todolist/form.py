@@ -16,6 +16,16 @@ class UserRegistrationForm(forms.ModelForm):
         model = User
         fields = "__all__"
 
+class UserLoginForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = "__all__"
+
+class UserNoteForm(forms.ModelForm):
+    class Meta:
+        model = UserNote
+        fields = "__all__"
+
 class AssignedTaskDescForm(forms.ModelForm):
     class Meta:
         model = AssignedTaskDescription
@@ -26,7 +36,3 @@ class PersonalTaskForm(forms.ModelForm):
         model = PersonalTask
         fields = "__all__"
 
-class UserNoteForm(forms.ModelForm):
-    class Meta:
-        model = UserNote
-        fields = "__all__"
