@@ -1,4 +1,5 @@
 from xmlrpc.client import boolean
+from distutils.command.upload import upload
 from django.db import models
 
 # Create your models here.
@@ -51,19 +52,14 @@ class User(models.Model):
     username = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
 
+#password = models.CharField(weight=forms.PasswordInput())
+
     class Meta:
         db_table = "users"
 
-"""class UserLogin(models.model):
-    user_username = models.CharField(max_length=50, blank=False)
-    user_password = models.CharField(max_length=100, blank=False)
+
+class UserProfile(models.Model):
+    image_url = models.FileField(upload_to='document/users/profile/')
 
     class Meta:
-        db_table = "user_login"
-
-class UserRegistration(models.model):
-    user_username = models.CharField(max_length=50, blank=False)
-    user_password = models.CharField(max_length=100, blank=False)
-    user_email = models.CharField(max_length=100, blank=False)
-    user_gender = models.BooleanField()
-    user_phone = models.IntegerField(max_length=20, blank=False)"""
+        db_table = "users_profile"

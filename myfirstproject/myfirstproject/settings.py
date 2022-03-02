@@ -127,3 +127,14 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#GAMIL = email send configuration
+
+EMAIL_USE_TLS = True # TLS/SSL secure connection protocal
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER="sushantd34@gmail.com"
+EMAIL_HOST_PASSWORD="undkrnbgmpmaejok"
+
+#django email send packages
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

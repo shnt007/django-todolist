@@ -18,10 +18,14 @@ urlpatterns = [
 
     #urls - users
     path('users/', views.user_index, name="users.index"),
+    path('users/profile', views.user_profile, name = "users.profile"),
     path('users/create', views.user_create, name="users.create"),
     path('users/register', views.user_register, name="users.register"),
-    path('users/login', views.user_login,name ="user.login"),
-    path('users/logout', views.user_logout,name ="user.logout"),
+    path('users/login', views.user_login,name ="users.login"),
+    path('users/logout', views.user_logout,name ="users.logout"),
+
+    #send emails
+    path('send-email/',views.send_email, name="send.email")
 
     #ORM
     # 1. index - display whole datalist

@@ -8,7 +8,9 @@
     <body>
         <div class="content">
             <h3>User Dashboard | TO DO LIST</h3>
-            <h4><a href = "{% url 'users.logout' %}">LOGOUT</a></h4>
+            <a href="{% url 'send.email' %}">SEND EMAIL</a>
+            <a href="{% url 'users.profile' %}">View Profile</a>
+            <h4><a href="{% url 'users.logout' %}">LOGOUT</a></h4>
             Welcome {{ username }}
         </div>
     </body>

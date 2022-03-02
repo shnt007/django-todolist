@@ -5,17 +5,19 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from datetime import date
 import calendar
+import json
 from calendar import HTMLCalendar
+from django.core.mail import send_mail as sm
 
 #importing forms
-from todolist.form import UserLoginForm, UserTaskForm
+from todolist.form import UserLoginForm, UserProfileForm, UserTaskForm
 from todolist.form import AssignedTaskDescForm
 from todolist.form import UserNoteForm
 from todolist.form import PersonalTaskForm
 from todolist.form import UserRegistrationForm
 
 # importing models
-from todolist.models import UserNote
+from todolist.models import UserNote, UserProfile
 from todolist.models import User
 
 # Create your views here.
@@ -137,6 +139,29 @@ def note_delete(request, note_id):
     msg = "Delete successfully"
     return render(request, 'notes/index.html', {'data':un, 'msg':msg})
 
+# send email
+def send_email(request):
+    # to take request from post method
+    
+    # res = sm(
+    #     subject = request.POST.get('subject'),
+    #     message = request.POST.get('message'),
+    #     from_email = 'sushantd34@gmail.com'
+    #     recipient_list = [request.POST.get('receiver_email')],
+    #     fail_silently = False,
+    # )
+
+    res = sm(
+        subject = 'Gmail Email Send Test',
+        message = 'Here is the message we have send you to test our gmail send message',
+        from_email = 'sushantd34@gmail.com',
+        recipient_list = ['sd993037@gmail.com'],
+        fail_silently = False,
+        # fail_silently takes boolean value. If set False it will raise smtplib.STMPException if the error
+        # occurs while sending the email
+    )
+    return HttpResponse(request, "Email send sucess" + str(res))
+
 # user
 def user_create(request):
     userForm = UserRegistrationForm 
@@ -147,11 +172,11 @@ def user_index(request):
         username = request.session['username']
         return render(request, 'users/index.html', {'username': username})
     else:
-        template= 'urls/login.html'
+        template = 'users/login.html'
         ul = UserLoginForm
         msg = "Please login to access"
-        context={'form':ul, 'msg':msg}
-        return render(request, template,context)
+        context = {'form':ul, 'msg': msg}
+        return render(request, template, context)
 
 def user_register(request):
     if request.method == "POST":
@@ -181,30 +206,46 @@ def user_login(request):
     template = 'users/login.html'
     form = UserLoginForm
     context = {'form':form}
-    if request.methond == "POST":
+    if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = User.object.get(username=username)
+        user = User.objects.get(username=username)
         if password == user.password:
-            request.session['username']= user.username
+            request.session['username'] = user.username
             if request.session.has_key('username'):
                 uname = request.session['username']
-                return render(request,'users/index/html',{'username':username})
+                return render(request, 'users/index.html', {'username': uname})
         else:
-            return render(request,template,context)
+            return render(request, template, context)
     else:
-        return render(request,template,context)
+        return render(request, template, context)
+
+def user_profile(request):
+    if request.session.has_key('username'):
+        username = request.session['username']
+        user = User.objects.get(username=username)
+        form = UserProfileForm
+        if request.method == "POST":
+            formSave = UserProfileForm(request.POST, request.FILES)
+            if formSave.is_valid():
+                formSave.save()
+                return render(request, 'users/show.html', {'form': form, 'data': user})
+        else:
+            return render(request, 'users/show.html', {'form': form, 'data': user})
+    else:
+        formLogin = UserLoginForm
+        return render(request, 'users/login.html', {'form': formLogin, 'msg': "please login to access"})
 
 def user_logout(request):
-    template= 'urls/login.html'
+    template = 'users/login.html'
     ul = UserLoginForm
     msg = "Please login to access"
-    context={'form':ul, 'msg':msg}
+    context = {'form':ul, 'msg': msg}
     if request.session.has_key('username'):
         del request.session['username']
         return render(request, template, context)
     else:
-        return render(request, template,context)
+        return render(request, template, context)
 
 '''def assigned_task_desc(request):
     assign = AssignedTaskDescForm
